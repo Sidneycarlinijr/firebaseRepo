@@ -21,7 +21,8 @@ const collection = "sidney";
             .then((snapshot)=>{
 
               snapshot.forEach((doc)=>{
-              console.log(doc.data());
+              let aluno = doc.data();
+              console.log(aluno);
               })
             })
 
@@ -98,3 +99,36 @@ database.collection(collection).doc("AlunoNovo").update(
 }).catch(err=>{
   console.log(err);
 });
+
+
+
+//vvvvvvvvvvvv USING A LISTENER (onSnapshot) vvvvvvvvvvvv
+database.collection("sidney").onSnapshot((snapshot) => {
+
+  snapshot.forEach((doc) =>{
+    let aluno = doc.data();
+    console.log(aluno);
+  })
+
+})
+
+
+//vvvvvvvvvvvv DELETING INFO vvvvvvvvvvvv
+database.collection(collection).doc("AlunoNovo").update({
+
+  notas: firebase.firestore.FieldValue.delete()
+
+})
+.then(()=>{
+  console.log("Info deletada")
+}).catch((err)=>{
+  console.log(err);
+})
+
+//           DELETING ALL DOCUMENT DATA
+database.collection(collection).doc("AlunoNovo").delete().then(() =>{
+  console.log("Conteúdo deletado");
+})
+.catch((err) =>{
+  console.log(err);
+})
