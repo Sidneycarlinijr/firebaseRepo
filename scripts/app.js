@@ -13,6 +13,7 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
+
 let database = firebase.firestore();
 const collection = "sidney";
 
@@ -132,3 +133,60 @@ database.collection(collection).doc("AlunoNovo").delete().then(() =>{
 .catch((err) =>{
   console.log(err);
 })
+
+
+
+// ********************************************************************
+//                           USER MANAGEMENT
+// ********************************************************************
+
+let auth = firebase.auth()
+
+function createUser(){
+let newUserEmail = "novoteste123@teste.com";
+let newUserPassword = "123abc";
+
+  auth.createUserWithEmailAndPassword(newUserEmail, newUserPassword)
+    .then(user => {
+      console.log(user);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+}
+
+function login(){
+  let userEmail = "novoteste123@teste.com";
+  let userPassword = "123abc";
+
+                                          // LOCAL, SESSION or NONE
+  auth.setPersistence(firebase.auth.Auth.Persistence.NONE).then(()=>{
+    auth.signInWithEmailAndPassword(userEmail, userPassword)
+      .then(loggedUser=>{
+        console.log(auth.currentUser)
+      }).catch(err =>{
+        console.log(err);
+      })
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+// login();
+
+//              THAT ONE IS A LISTENER METHOD (StateChanged)
+  auth.onAuthStateChanged(user=>{
+    if(user){
+      console.log(user);
+    }else{
+      console.log("Ninguém logado.")}
+  })
+
+  function logout(){
+    auth.signOut().then(()=> {
+      console.log("Deslogado com sucesso")
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  // setTimeout(login, 2000);
